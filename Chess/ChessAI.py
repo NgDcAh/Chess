@@ -71,11 +71,11 @@ def findBestMove(game_state, valid_moves, return_queue):
     global next_move
     next_move = None
     random.shuffle(valid_moves)
-    findMove_Minimax_AlphaBeta(game_state, valid_moves, DEPTH, -CHECKMATE, CHECKMATE, 1 if game_state.white_to_move else -1)
+    findMove_Negamax_AlphaBeta(game_state, valid_moves, DEPTH, -CHECKMATE, CHECKMATE, 1 if game_state.white_to_move else -1)
     return_queue.put(next_move)
 
 
-def findMove_Minimax_AlphaBeta(game_state, valid_moves, depth, alpha, beta, turn_multiplier):
+def findMove_Negamax_AlphaBeta(game_state, valid_moves, depth, alpha, beta, turn_multiplier):
     global next_move
     if depth == 0:
         return turn_multiplier * scoreBoard(game_state)
@@ -84,7 +84,7 @@ def findMove_Minimax_AlphaBeta(game_state, valid_moves, depth, alpha, beta, turn
     for move in valid_moves:
         game_state.makeMove(move)
         next_moves = game_state.getValidMoves()
-        score = -findMove_Minimax_AlphaBeta(game_state, next_moves, depth - 1, -beta, -alpha, -turn_multiplier)
+        score = -findMove_Negamax_AlphaBeta(game_state, next_moves, depth - 1, -beta, -alpha, -turn_multiplier)
         if score > max_score:
             max_score = score
             if depth == DEPTH:
