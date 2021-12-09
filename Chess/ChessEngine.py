@@ -543,12 +543,10 @@ class Move:
             else:
                 return "0-0"
         if self.is_enpassant_move:
-            return self.getRankFile(self.start_row, self.start_col)[0] + "x" + self.getRankFile(self.end_row,
-                                                                                                self.end_col) + " e.p."
+            return self.getRankFile(self.start_row, self.start_col)[0] + " x " + self.getRankFile(self.end_row, self.end_col)
         if self.piece_captured != "--":
             if self.piece_moved[1] == "P":
-                return self.getRankFile(self.start_row, self.start_col)[0] + "x" + self.getRankFile(self.end_row,
-                                                                                                    self.end_col)
+                return self.getRankFile(self.start_row, self.start_col)[0] + " x " + self.getRankFile(self.end_row, self.end_col)
             else:
                 return self.piece_moved[1] + "x" + self.getRankFile(self.end_row, self.end_col)
         else:
@@ -576,5 +574,5 @@ class Move:
 
         move_string = self.piece_moved[1]
         if self.is_capture:
-            move_string += "x"
+            move_string += " x "
         return move_string + end_square

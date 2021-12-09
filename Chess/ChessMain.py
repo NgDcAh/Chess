@@ -1,6 +1,6 @@
 import ChessEngine, ChessAI
 import pygame as p
-from multiprocessing import Process, Queue
+
 
 
 WIDTH = 700
@@ -51,11 +51,9 @@ def main():
     sqSelected = ()
     playerClicks = []
 
-    ai_thinking = False
-    move_undone = False
-    move_finder_process = None
 
-    playerOne = True
+
+    playerOne = False
     playerTwo = False
 
     while running:
@@ -100,10 +98,7 @@ def main():
                         sqSelected = ()
                         playerClicks = []
                         moveMade = True
-                        if ai_thinking:
-                            move_finder_process.terminate()
-                            ai_thinking = False
-                        move_undone = True
+
 
 
                     elif 556 <= location[0] <= 616 and 430 <= location[1] <= 490: # reset
@@ -113,38 +108,27 @@ def main():
                         playerClicks = []
                         moveMade  = False
                         gameOver = False
-                        if ai_thinking:
-                            move_finder_process.terminate()
-                            ai_thinking = False
-                        move_undone = True
+
 
 
         drawGameState(screen, gs, validMoves, sqSelected)
 
         #AI
-        if not gameOver and not human_turn and not move_undone:
-            if not ai_thinking:
-                ai_thinking = True
-                print("thinking...")
-                return_queue = Queue()
-                move_finder_process = Process(target=ChessAI.findBestMove, args=(gs, validMoves, return_queue))
-                move_finder_process.start()
-
-            if not move_finder_process.is_alive():
-                print("thinking done")
-                ai_move = return_queue.get()
-                if ai_move is None:
-                    ai_move = ChessAI.findRandomMove(validMoves)
-                gs.makeMove(ai_move)
-                moveMade = True
-                ai_thinking = False
+        if not gameOver and not human_turn:
+            print("\n-----Thinking-----\n")
+            ai_move = ChessAI.findBestMove(gs, validMoves)
+            if ai_move is None:
+                ai_move = ChessAI.findRandomMove(validMoves)
+            print("\n-----Done-----\n")
+            gs.makeMove(ai_move)
+            moveMade = True
 
 
         if moveMade:
             print(gs.white_to_move, "is white")
             validMoves = gs.getValidMoves()
             moveMade = False
-            move_undone = False
+
 
 
         if gs.checkmate:
@@ -158,10 +142,7 @@ def main():
                     playerClicks = []
                     moveMade = False
                     gameOver = False
-                    if ai_thinking:
-                        move_finder_process.terminate()
-                        ai_thinking = False
-                    move_undone = True
+
 
 
             if gs.white_to_move:
@@ -182,10 +163,7 @@ def main():
                     playerClicks = []
                     moveMade = False
                     gameOver = False
-                    if ai_thinking:
-                        move_finder_process.terminate()
-                        ai_thinking = False
-                    move_undone = True
+
 
         clock.tick(maxfps)
         p.display.flip()

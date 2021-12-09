@@ -62,17 +62,17 @@ piece_position_scores = {"N": knight_scores,
                          "wP": white_pawn_scores,
                          "bP": black_pawn_scores}
 
-CHECKMATE = 1000000
+CHECKMATE = 99999999
 STALEMATE = 0
 DEPTH = 3
 
 
-def findBestMove(game_state, valid_moves, return_queue):
+def findBestMove(game_state, valid_moves):
     global next_move
     next_move = None
     random.shuffle(valid_moves)
     findMove_Negamax_AlphaBeta(game_state, valid_moves, DEPTH, -CHECKMATE, CHECKMATE, 1 if game_state.white_to_move else -1)
-    return_queue.put(next_move)
+    return next_move
 
 
 def findMove_Negamax_AlphaBeta(game_state, valid_moves, depth, alpha, beta, turn_multiplier):
