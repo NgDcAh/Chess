@@ -53,7 +53,7 @@ def main():
 
 
 
-    playerOne = False
+    playerOne = True
     playerTwo = False
 
     while running:
